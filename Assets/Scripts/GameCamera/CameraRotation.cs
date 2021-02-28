@@ -38,5 +38,6 @@ namespace GameCamera
             _endRot.y = _trans.rotation.eulerAngles.y - rotationAmount;
             _trans.DOLocalRotate(_endRot, rotationDuration).SetEase(Ease.InOutQuad);
         }
+        
     }   
 }
