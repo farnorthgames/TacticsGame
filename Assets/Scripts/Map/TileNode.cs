@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 using UnityEngine;
 using static Map.TileProperties;
 
@@ -19,13 +18,15 @@ namespace Map
 
         public GameObject worldObject;
 
+        public Renderer renderer;
+
         public int moveValue;
-    
-        public TileTerrain? terrainType;
+
+        public TileTerrain terrainType;
     
         public TilePassThrough passThrough;
         
-        public TileNode(TileTerrain? terrainType)
+        public TileNode()
         {
             x = 0;
             y = 0;
@@ -36,34 +37,66 @@ namespace Map
             
             parentNode = null;
             worldObject = null;
+            renderer = null;
+            
+        }
 
-            if (terrainType == null)
-                terrainType = TileTerrain.GRASS;   
-            
-            this.terrainType = terrainType;  
-            
-            switch (terrainType)
+        public void SetTileElement(TileTerrain type)
+        {
+            switch (type)
             {
-                case TileTerrain.GRASS: 
+                case TileTerrain.GRASS:
+                    terrainType = TileTerrain.GRASS;
+                    moveValue = 1;
+                    passThrough = TilePassThrough.WALKABLE;
+                    break;
                 case TileTerrain.DIRT:
+                    terrainType = TileTerrain.DIRT;
+                    moveValue = 1;
+                    passThrough = TilePassThrough.WALKABLE;
+                    break;
                 case TileTerrain.STONE:
+                    terrainType = TileTerrain.STONE;
+                    moveValue = 1;
+                    passThrough = TilePassThrough.WALKABLE;
+                    break;
                 case TileTerrain.WOOD:
+                    terrainType = TileTerrain.WOOD;
+                    moveValue = 1;
+                    passThrough = TilePassThrough.WALKABLE;
+                    break;
                 case TileTerrain.SAND:
+                    terrainType = TileTerrain.SAND;
                     moveValue = 1;
                     passThrough = TilePassThrough.WALKABLE;
                     break;
                 case TileTerrain.WATER:
+                    terrainType = TileTerrain.WATER;
+                    moveValue = 2;
+                    passThrough = TilePassThrough.WALKABLE;
+                    break;
                 case TileTerrain.SWAMP:
+                    terrainType = TileTerrain.SWAMP;
                     moveValue = 2;
                     passThrough = TilePassThrough.WALKABLE;
                     break;
                 case TileTerrain.QUICKSAND:
+                    terrainType = TileTerrain.QUICKSAND;
                     moveValue = 4;
                     passThrough = TilePassThrough.WALKABLE;
                     break;
                 case TileTerrain.DEEP_WATER:
+                    terrainType = TileTerrain.DEEP_WATER;
+                    moveValue = 0;
+                    passThrough = TilePassThrough.NON_WALKABLE;
+                    break;
                 case TileTerrain.DEEP_SWAMP:
+                    terrainType = TileTerrain.DEEP_SWAMP;
+                    moveValue = 0;
+                    passThrough = TilePassThrough.NON_WALKABLE;
+                    break;
                 case TileTerrain.LAVA:
+                    terrainType = TileTerrain.LAVA;
                     moveValue = 0;
                     passThrough = TilePassThrough.NON_WALKABLE;
                     break;
@@ -81,6 +114,7 @@ namespace Map
                    $"{nameof(gCost)}: {gCost}, " +
                    $"{nameof(parentNode)}: {parentNode}, " +
                    $"{nameof(worldObject)}: {worldObject}, " +
+                   $"{nameof(renderer)}: {renderer}, " +
                    $"{nameof(moveValue)}: {moveValue}, " +
                    $"{nameof(terrainType)}: {terrainType}, " +
                    $"{nameof(passThrough)}: {passThrough}, " +

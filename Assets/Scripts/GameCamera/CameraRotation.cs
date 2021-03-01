@@ -1,5 +1,5 @@
 ﻿using DG.Tweening;
-using Input;
+using Controls;
 using UnityEngine;
 
 namespace GameCamera

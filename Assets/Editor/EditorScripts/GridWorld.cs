@@ -24,8 +24,6 @@ namespace EditorScripts
 
         private static LayerMask _mask;
 
-        private static GridMap _map;
-
         private static bool _hasHit;
 
         private static RaycastHit _currentHit;
@@ -56,8 +54,6 @@ namespace EditorScripts
             _parentObject.transform.position = Vector3.zero;
             _parentObject.name = "WorldOverlay";
             _parentObject.tag = "WorldOverlay";
-
-            _map = _parentObject.GetComponent<GridMap>();
 
             GenerateUIGrid();
         }
@@ -119,30 +115,19 @@ namespace EditorScripts
                 scale.y = 1.44f;
                 _obj.transform.localScale = scale;
             }
-            
-            // FindTileType(); // <- Find Type type here.
                     
             var tile = _obj.GetComponent<Tile>().tileNode;
 
             tile.x = (int)_pos.x;
             tile.y = (int)(_pos.y);
             tile.z = (int)_pos.z;
-
-            // tile.hCost = 1;
             
             tile.worldObject = _obj;
-            tile.terrainType = TileTerrain.GRASS;
+            tile.renderer = _obj.GetComponent<Renderer>();
+            tile.SetTileElement(TileTerrain.GRASS);
 
             _obj.name = $"[W: {tile.x}] [H: {tile.y}] [L: {tile.z}]";
-        }
-
-        private static void FindTileType()
-        {
-            // Physics.Raycast(_pos, Vector3.down, out var hit, int.MaxValue, _mask);
-
-            // Need to find type type here. This will not be as simple as I thought due to multiple textures 
-            // fading together on one object.  I.E Could be two active textures on the same spot.  Textures don't
-            // seem to be accessible from the material via a raycast hit.
+            _obj.SetActive(false);
         }
     }
 }

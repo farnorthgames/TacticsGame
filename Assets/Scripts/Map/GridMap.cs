@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Map
@@ -8,9 +7,9 @@ namespace Map
     {
         public static GridMap Instance { get; private set; }
         
-        private int minX, maxX;
-        private int minY, maxY;
-        private int minZ, maxZ;
+        private int _minX, _maxX;
+        private int _minY, _maxY;
+        private int _minZ, _maxZ;
         
         public Vector3 StartPosition { get; set; }
         public Vector3 EndPosition { get; set; }
@@ -19,13 +18,15 @@ namespace Map
 
         private Color _initialColor;
 
+        public List<TileNode> Path { get; private set; }
+
         private void Awake()
         {
             Instance = this;
 
             StartPosition = new Vector3(15, 4, 30);
 
-            var tiles = GameObject.FindWithTag("WorldOverlay").GetComponentsInChildren<Tile>();
+            var tiles = GameObject.FindWithTag("WorldOverlay").GetComponentsInChildren<Tile>(true);
 
             var nodesList = new List<TileNode>();
 
@@ -40,14 +41,14 @@ namespace Map
             // Debug.Log(nodes.Length);
 
             var worldBounds = GameObject.FindWithTag("Ground").GetComponent<MeshRenderer>().bounds;
-            minX = (int)worldBounds.min.x;
-            maxX = (int)worldBounds.max.x;
+            _minX = (int)worldBounds.min.x;
+            _maxX = (int)worldBounds.max.x;
         
-            minY = (int)worldBounds.min.y;
-            maxY = (int)worldBounds.max.y;
+            _minY = (int)worldBounds.min.y;
+            _maxY = (int)worldBounds.max.y;
         
-            minZ = (int)worldBounds.min.z;
-            maxZ = (int)worldBounds.max.z;
+            _minZ = (int)worldBounds.min.z;
+            _maxZ = (int)worldBounds.max.z;
 
             var xLength = (int)worldBounds.extents.x * 2 + 1;
             var yLength = (int)worldBounds.extents.y * 2 + 1;
@@ -55,17 +56,11 @@ namespace Map
             
             grid = new TileNode[xLength, yLength, zLength];
             
-            // Debug.Log($"{xLength}, {yLength}, {zLength}");
-            
-            // Debug.Log(grid.Length);
-            
-            // Debug.Log($"{minX}, {maxX}, {minY}, {maxY}, {minZ}, {maxZ}");
-            
-            for (var x = minX; x <= maxX; x++)
+            for (var x = _minX; x <= _maxX; x++)
             {
-                for (var y = minY; y <= maxY; y++)
+                for (var y = _minY; y <= _maxY; y++)
                 {
-                    for (var z = minZ; z <= maxZ; z++)
+                    for (var z = _minZ; z <= _maxZ; z++)
                     {
                         foreach (var node in nodes)
                         {
@@ -94,9 +89,9 @@ namespace Map
         {
             TileNode node = null;
 
-            if (x <= maxX && x >= minX && 
-                y <= maxY && y >= minY && 
-                z <= maxZ && z >= minZ)
+            if (x <= _maxX && x >= _minX && 
+                y <= _maxY && y >= _minY && 
+                z <= _maxZ && z >= _minZ)
             {
                 node = grid[x, y, z];
             }
@@ -113,15 +108,18 @@ namespace Map
             return GetTileNode(x, y, z);
         }
 
-        public void StartPathfinding()
+        public List<TileNode> StartPathfinding()
         {
             foreach (var tileNode in grid)
             {
                 if (tileNode == null)
                     continue;
-                    
-                if (tileNode.worldObject.GetComponent<Renderer>().material.color == Color.cyan)
-                    tileNode.worldObject.GetComponent<Renderer>().material.color = _initialColor;
+
+                if (tileNode.renderer.material.color != Color.cyan)
+                    continue;
+                
+                tileNode.renderer.material.color = _initialColor;
+                tileNode.worldObject.SetActive(false);
             }
             
             var pathfinder = new Pathfinder();
@@ -134,14 +132,26 @@ namespace Map
             var endNode = GetNodeFromVector(EndPosition);
                 
             // Find path.
-            var path = pathfinder.FindPath(startNode, endNode);
+            Path = pathfinder.FindPath(startNode, endNode);
                 
             // Change colour of tile for each object passed through.
-            startNode.worldObject.GetComponent<Renderer>().material.color = Color.cyan;
-            foreach (var node in path)
+            
+            startNode.worldObject.SetActive(true);
+            startNode.renderer.material.color = Color.cyan;
+            
+            foreach (var node in Path)
             {
-                node.worldObject.GetComponent<Renderer>().material.color = Color.cyan;
+                node.worldObject.SetActive(true);
+                node.renderer.material.color = Color.cyan;
             }
+
+            if (Path.Count >= 1) 
+                return Path;
+            
+            startNode.renderer.material.color = _initialColor;
+            startNode.worldObject.SetActive(false);
+
+            return Path;
         }
     }
 }

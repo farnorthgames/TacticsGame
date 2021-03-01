@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using static Map.TileProperties;
 
@@ -38,7 +39,7 @@ namespace Map
                 {
                     // Check for costs of current node
                     if (openNodes[i].FCost < currentNode.FCost ||
-                        openNodes[i].FCost == currentNode.FCost &&
+                        Math.Abs(openNodes[i].FCost - currentNode.FCost) < Mathf.Epsilon &&
                         openNodes[i].hCost < currentNode.hCost)
                     {
                         // Assign a new current node.
@@ -116,7 +117,7 @@ namespace Map
 
             for (var x = -1; x <= 1; x++)
             {
-                for (var yIndex = -1; yIndex <= 1; yIndex++)
+                for (var yIndex = 0; yIndex <= 0; yIndex++) // Use -1 Character jump limit here for index numbers.
                 {
                     for (var z = -1; z <= 1; z++)
                     {
@@ -128,6 +129,7 @@ namespace Map
                             yIndex = 0;
                         }
 
+                        // Remove Diagonal Movement.
                         if (x == 0 && y == 0 && z == 0 || 
                             x == 1 && z == 1 || 
                             x == -1 && z == 1 || 
@@ -137,7 +139,7 @@ namespace Map
                             continue;
                         }
                         
-                        var searchPosition = new TileNode(null);
+                        var searchPosition = new TileNode();
 
                         searchPosition.x = node.x + x;
                         searchPosition.y = node.y + y;

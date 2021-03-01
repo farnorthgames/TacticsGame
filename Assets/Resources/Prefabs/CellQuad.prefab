@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8132864175889780199}
   - component: {fileID: 4349422371212811675}
   - component: {fileID: 7569916331834921819}
-  - component: {fileID: 8418022097685446758}
   - component: {fileID: 2894471249769335747}
   m_Layer: 0
   m_Name: CellQuad
@@ -97,27 +96,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileNode:
-    _worldObject: {fileID: 0}
+    x: 0
+    y: 0
+    z: 0
+    hCost: 0
+    gCost: 0
+    worldObject: {fileID: 0}
     moveValue: 0
     passThrough: 0
-  _fCost: {fileID: 0}
-  _gCost: {fileID: 0}
-  _hCost: {fileID: 0}
-  _x: {fileID: 0}
-  _y: {fileID: 0}
-  _z: {fileID: 0}
---- !u!114 &8418022097685446758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8917325710521995557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f63ee7a0ead30d447ad00a1c93fc12ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &2894471249769335747
 BoxCollider:
   m_ObjectHideFlags: 0
